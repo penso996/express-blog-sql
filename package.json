@@ -1,0 +1,25 @@
+{
+  "name": "express-blog-sql",
+  "version": "1.0.0",
+  "description": "blog",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/penso996/express-blog-sql.git"
+  },
+  "keywords": [
+    "blog"
+  ],
+  "author": "Andrea Penso",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/penso996/express-blog-sql/issues"
+  },
+  "homepage": "https://github.com/penso996/express-blog-sql#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
