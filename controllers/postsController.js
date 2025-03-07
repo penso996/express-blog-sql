@@ -6,7 +6,10 @@ const database = require("../data/database");
 function index(req, res) {
 
     // SQL query to show all posts
-    const sql = "SELECT * FROM posts";
+    const sql = `SELECT
+        posts.id,
+        posts.title
+    FROM posts`;
 
     // Execute Query
     database.query(sql, (err, results) => {
@@ -29,7 +32,7 @@ function show(req, res) {
     FROM posts
     JOIN post_tag ON posts.id = post_tag.post_id
     JOIN tags ON post_tag.tag_id = tags.id
-    WHERE posts.id = ?`
+    WHERE posts.id = ?`;
 
     // Execute Query                     
     database.query(sql, [id], (err, results) => {
