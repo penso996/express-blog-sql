@@ -28,6 +28,7 @@ function show(req, res) {
         posts.id,
         posts.title,
         posts.content,
+        posts.image,
         GROUP_CONCAT(tags.label SEPARATOR ', ') AS tags
     FROM posts
     JOIN post_tag ON posts.id = post_tag.post_id
