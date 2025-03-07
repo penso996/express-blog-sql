@@ -1,10 +1,11 @@
 // Importing data
 const database = require("../data/database");
 
-// Function for posts (objects) routing behaviour
+// Function for posts routing behaviour
 // Index function
 function index(req, res) {
 
+    // SQL query to show all posts
     const sql = "SELECT * FROM posts";
 
     // Execute Query
@@ -17,23 +18,35 @@ function index(req, res) {
 // Show function
 function show(req, res) {
 
-    // Filter by ID key in postsData
-    const id = parseInt(req.params.id);
-    const post = postsData.find(post => post.id === id);
+    // Read ID from URL
+    const id = parseInt(req.params.id)
+    // SQL query to show the post with the given ID
+    const sql = `SELECT
+        posts.id,
+        posts.title,
+        posts.content,
+        GROUP_CONCAT(tags.label SEPARATOR ', ') AS tags
+    FROM posts
+    JOIN post_tag ON posts.id = post_tag.post_id
+    JOIN tags ON post_tag.tag_id = tags.id
+    WHERE posts.id = ?`
 
-    // If no object in ID position in postsData
-    if (!post) {
-        // Error 404
-        return res.status(404).json({
-            error: "Not found",
-            message: "Post not found"
-        });
-    }
+    // Execute Query                     
+    database.query(sql, [id], (err, results) => {
+        if (err) return res.status(500).json({ error: "Failed to gather post info" });
 
-    // OR return object found in that position in postsData (in JSON)
-    res.json(post);
+        // Check if post was found
+        if (results.length === 0) {
+            return res.status(404).json({ error: "Post not found" });
+        }
+
+        // Return the post data as JSON
+        res.json(results[0]);
+
+    });
 }
 
+// WIP
 // Store function
 function store(req, res) {
 
@@ -62,6 +75,7 @@ function store(req, res) {
     console.log(postsData);
 }
 
+// WIP
 // Update function
 function update(req, res) {
 
@@ -91,6 +105,7 @@ function update(req, res) {
     console.log(postsData);
 }
 
+// WIP
 // Modify
 function modify(req, res) {
 
@@ -123,27 +138,16 @@ function modify(req, res) {
 // Destroy function
 function destroy(req, res) {
 
-    // Filter by ID key in postsData
-    const id = parseInt(req.params.id);
-    const post = postsData.find(post => post.id === id);
+    // Read ID from URL
+    const id = parseInt(req.params.id)
+    // SQL query to delete the post with the given ID
+    const sql = "DELETE FROM posts WHERE id = ?";
 
-    // If no object in ID position
-    if (!post) {
-        // Error 404
-        return res.status(404).json({
-            error: "Not found",
-            message: "Post not found"
-        });
-    }
-
-    // OR delete object in ID position
-    postsData.splice(postsData.indexOf(post), 1);
-
-    // Send 204 status
-    res.sendStatus(204);
-
-    // DEBUG: updated postsData
-    console.log(postsData);
+    // Execute Query                     
+    database.query(sql, [id], (err) => {
+        if (err) return res.status(500).json({ error: "Failed to delete" });
+        res.sendStatus(204);
+    });
 }
 
 
